@@ -1,0 +1,31 @@
+name: 전시 데이터 자동 수집
+
+on:
+  schedule:
+    # 매일 오전 3시 (한국시간) 자동 실행
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+    # 수동 실행 버튼도 활성화
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
+
+      - name: Python 설치
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 패키지 설치
+        run: |
+          pip install requests firebase-admin
+
+      - name: 크롤러 실행
+        env:
+          FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
+          SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
+        run: python crawler.py
