@@ -10,7 +10,9 @@ def init_firebase():
     firebase_key = os.environ.get('FIREBASE_KEY')
     key_dict = json.loads(firebase_key)
     cred = credentials.Certificate(key_dict)
-    firebase_admin.initialize_app(cred)
+    firebase_admin.initialize_app(cred, {
+        'projectId': key_dict['project_id'],
+    })
     return firestore.client()
 
 # 서울시 전시 데이터 수집
